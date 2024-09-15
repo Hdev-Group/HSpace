@@ -49,9 +49,10 @@ export default function ProfilePage() {
                     <div className="flex md:flex-row flex-col justify-between items-start">
                       <div className="md:pr-12">
                         <p className="text-3xl font-bold flex items-center gap-2">
-                          <span className="hover:bg-neutral-500/30  cursor-pointer py-0.5 rounded-md"><Dialog>
-      <DialogTrigger asChild>
-        <h2>Harry Campbell</h2>
+                        <Dialog>
+                        <DialogTrigger asChild>
+                          <span className="hover:bg-neutral-500/30  cursor-pointer py-0.5 rounded-md">Harry Campbell</span>
+
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] dark:bg-gray-900">
         <DialogHeader>
@@ -62,7 +63,7 @@ export default function ProfilePage() {
             <AvatarImage src="/1720299869628.jpeg" alt="Harry Campbell" />
             <AvatarFallback>HC</AvatarFallback>
           </Avatar>
-          <h2 className="text-2xl font-bold">Harry Campbell</h2>
+          <p className="text-2xl font-bold">Harry Campbell</p>
         </div>
         <div className="grid gap-4 py-4">
           <div className="flex items-center space-x-4">
@@ -88,7 +89,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </DialogContent>
-    </Dialog></span> <VerifiedBadge />
+    </Dialog> <VerifiedBadge />
                         </p>
                         <p className="text-muted-foreground text-lg">@harry</p>
                         <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">

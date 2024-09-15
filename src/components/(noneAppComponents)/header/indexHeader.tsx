@@ -19,9 +19,13 @@ export default function Header() {
                 </div>
                 <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                     <nav className="flex items-center">
-                        <Button variant="ghost" className="mr-2">Log in</Button>
+                        <a href='/log-in'>
+                            <Button variant="ghost" className="mr-2">Log in</Button>
+                        </a>
                         <Button variant="ghost" className="mr-2">Support</Button>
-                        <Button>Sign up</Button>
+                        <a href='/sign-up'>
+                            <Button>Sign up</Button>
+                        </a>
                     </nav>
                 </div>
             </div>
