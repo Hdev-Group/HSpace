@@ -21,10 +21,12 @@ export default function Home() {
               Connect, collaborate, and grow with the world's most innovative developer community
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="dark:bg-primary dark:text-primary-foreground">
-                Join the Community
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <a href="/feed">
+                <Button size="lg" className="dark:bg-primary dark:text-primary-foreground">
+                  Join the Community
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
               <Button size="lg" variant="outline" className="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                 Explore Projects
               </Button>

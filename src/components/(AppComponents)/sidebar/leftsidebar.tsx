@@ -1,7 +1,12 @@
+"use client"
 import Link from "next/link"
 import { Code, Users, Calendar, Hash, Cpu, Bookmark } from "lucide-react"
+import { useUser } from "@clerk/clerk-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 export default function LeftSidebar() {
+  const { user } = useUser();
   return (
     <div className="flex sticky mt-8 top-[59px] z-20 h-full">
       <aside className="w-64 md:flex hidden flex-col space-y-6 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 rounded-r-lg rounded-l-sm overflow-hidden shadow-lg">
@@ -10,16 +15,14 @@ export default function LeftSidebar() {
             <div className="w-full h-20 absolute">
                 <img src="/placeholder/image_2024-08-17_19-24-08.png" className="w-full" />
             </div>
-            <div className="w-24 h-24 mt-5 p-1 z-50 rounded-full overflow-hidden bg-gray-900 flex items-center justify-center">
-              <img
-                src="/1720299869628.jpeg"
-                className="w-full h-full rounded-full object-cover"
-                />
-            </div>
+            <Avatar className="w-24 h-24 mt-5 p-1 z-50 rounded-full overflow-hidden bg-gray-900 flex items-center justify-center" >
+                  <AvatarFallback className="w-full h-full rounded-full object-cover" />
+                  <AvatarImage src={user?.imageUrl} className="w-full h-full  rounded-full object-cover" />
+                </Avatar>
           </a>
           <div className="px-4 gap-0.5 w-full flex flex-col items-center">
-          <h2 className="mt-2 text-lg font-bold">Harry Campbell</h2>
-          <a className="text-sm mt-[-4px] font-semibold text-gray-400" href="/profile/userid">@harry</a>
+          <h2 className="mt-2 text-lg font-bold">{user?.firstName} {user?.lastName}</h2>
+          <a className="text-sm mt-[-4px] font-semibold text-gray-400" href="/profile/userid">@{user?.username}</a>
           <p className="text-sm text-gray-400">Lead Developer & Founder @ Hdev Group | Full Stack Development | Software Security Engineer</p>
           <div className="flex flex-row mt-4 w-full justify-between">
             <div className="px-3 py-1 bg-blue-600 rounded-full text-xs font-semibold">
