@@ -1,8 +1,9 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Github, Linkedin, Twitter, User,Star, Award,UserIcon,CalendarIcon,InfoIcon , Verified, MapPin, Calendar } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Github, Linkedin, Twitter, User,Star, Award,UserIcon,CalendarIcon,InfoIcon, Verified, Edit, MapPin, Calendar, MapPinIcon, BuildingIcon } from "lucide-react"
 import Badges from "../../../../../components/(AppComponents)/badges/badges"
 import Header from "../../../../../components/(AppComponents)/header/header"
 import type { ProjectCard } from "../../../../../types/types"
@@ -19,6 +20,12 @@ export default function ProfilePage() {
 
   function viewdetails() {
     console.log('Viewing details')
+  }
+  function EditProfile() {
+    console.log('Editing profile')
+  }
+  function EditAbout() {
+    console.log('Editing about')
   }
 
   return (
@@ -102,12 +109,13 @@ export default function ProfilePage() {
                           <p className="text-blue-600 dark:text-blue-400 font-medium">Friends <span className="font-bold">127</span></p>
                         </div>
                       </div>
-                      <div className="flex flex-row md:flex-col gap-4 md:w-auto w-full items-end">
-                        <Badges level={26} isstaff={true} />
+                      <div className="flex mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
+                        <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                         <div className="flex flex-row gap-2  items-end justify-end">
                           <Button className="bg-blue-600 hover:bg-blue-700 text-white">Follow</Button>
                           <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">Message</Button>
                         </div>
+                        <Badges level={26} isstaff={true} bugfinder={true} />
                       </div>
                     </div>
                     <div className="flex gap-4 mt-6">
@@ -131,8 +139,9 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
               <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                   <p className="text-2xl font-semibold">About</p>
+                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                 </CardHeader>
                 <CardContent>
                   <p className="text-base text-gray-600 dark:text-gray-300">Harry is a full stack software engineer with over 5 years of experience in building scalable web applications. He specializes in React, TypeScript, and Node.js, and has a passion for creating intuitive user interfaces and robust backend systems.</p>
@@ -150,19 +159,37 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
               <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <p className="text-2xl font-semibold">Work</p>
+                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-6">
+                    <JobCard
+                      jobtitle="Lead Developer & Founder"
+                      company="HDev Group"
+                      location="Remote"
+                      date="2020 - Present"
+                      skills={["React", "TypeScript", "Node.js", "AWS"]}
+                      description="Lead a team of developers to build cutting-edge web applications and developer tools. Responsible for project planning, code reviews, and technical architecture."
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-gray-800 shadow-md">
+                <CardHeader className="flex flex-row items-center justify-between">
                   <p className="text-2xl font-semibold">Projects</p>
+                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                 </CardHeader>
                 <CardContent>
                   <ProjectShower />
                 </CardContent>
               </Card>
               <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader>
-                  <CardTitle>
+                  <CardHeader className="flex flex-row items-center justify-between">
                     <p className="text-2xl font-semibold">Licenses & Certifications</p>
-                  </CardTitle>
-                </CardHeader>
+                    <button className="p-1 rounded-full flex items-center justify-center px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  </CardHeader>
                 <CardContent>
                   <div className="flex flex-col gap-6">
                     <LicensesCard
@@ -174,6 +201,34 @@ export default function ProfilePage() {
                       title="AWS Certified Developer - Associate"
                       issuer="Amazon Web Services"
                       date="2022"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-gray-800 shadow-md overflow-hidden">
+                <CardHeader className="border-b border-border">
+                  <div className="flex items-center justify-between">
+                    <CardTitle>
+                      <p className="text-2xl font-bold">Harry is Hiring</p>
+                    </CardTitle>
+                    <Button variant="outline" size="sm">View all jobs</Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <JobsCard
+                      title="Full Stack Developer"
+                      company="HDev Group"
+                      location="Remote"
+                      date="2 days ago"
+                      description="We are looking for a full stack developer to join our team and help us build the next generation of developer tools."
+                    />
+                    <JobsCard
+                      title="UX Designer"
+                      company="HDev Group"
+                      location="Remote"
+                      date="1 week ago"
+                      description="Join our design team to create intuitive and beautiful user experiences for our cutting-edge products."
                     />
                   </div>
                 </CardContent>
@@ -307,6 +362,35 @@ function ProjectCard({ title, description, link, image, technology, type }: Proj
   )
 }
 
+function JobCard({jobtitle, company, date, location, description, skills}: {jobtitle: string, company: string, date: string, location: string, description: string, skills: string[]}) {
+  return(
+    <div className="flex items-start gap-4">
+    <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+      <BuildingIcon className="w-6 h-6 text-blue-600 dark:text-blue-300" />
+    </div>
+    <div>
+      <h4 className="font-semibold text-lg">{jobtitle}</h4>
+      <div className="flex flex-row items-center gap-2">
+        <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">{company}</p>
+        <span>•</span>
+        <p className="text-sm flex-row flex items-center gap-1 text-gray-600 dark:text-gray-300"><MapPin className="w-4" /> {location}</p>
+      </div>
+      <p className="text-sm text-gray-500 dark:text-gray-400">{date}</p>
+      <div className="w-full h-0.5 border-t border-gray-200 dark:border-gray-700 my-2"/>
+      <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+      <div className="w-full h-0.5 border-t border-gray-200 dark:border-gray-700 my-2"/>
+      <div className="flex gap-2 flex-row">
+        {skills?.map((skill) => (
+          <Badge key={skill} variant="secondary" className="text-xs">
+            {skill}
+          </Badge>
+        ))}
+      </div>
+    </div>
+  </div>
+  )
+}
+
 function ReviewCard({reviewerid, review, rating}: {reviewerid: string, review: string, rating: number}) {
   return (
     <div className="flex gap-4 pb-4">
@@ -339,5 +423,35 @@ function LicensesCard({title, issuer, date}: {title: string, issuer: string, dat
         <Button variant="link" className="mt-2 p-0 h-auto text-blue-600 dark:text-blue-400">View Certificate</Button>
       </div>
     </div>
+  )
+}
+function JobsCard({title, company, location, date, description}: {title: string, company: string, location: string, date: string, description: string}) {
+  return (
+    <Card className="group hover:shadow-lg transition-shadow duration-200 border-2 border-gray-700 bg-transparent">
+      <CardContent className="p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="font-semibold text-xl mb-1">{title}</h4>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <BuildingIcon className="w-4 h-4" />
+                <span>{company}</span>
+                <span>•</span>
+                <MapPinIcon className="w-4 h-4" />
+                <span>{location}</span>
+              </div>
+            </div>
+            <Badge variant="secondary" className="text-xs">
+              <CalendarIcon className="w-3 h-3 mr-1" />
+              {date}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">{description}</p>
+        </div>
+      </CardContent>
+      <CardFooter className="px-6 pb-6 pt-0">
+        <Button size="sm" className="w-full">Apply Now</Button>
+      </CardFooter>
+    </Card>
   )
 }

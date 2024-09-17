@@ -9,9 +9,10 @@ import {
 interface BadgesProps {
     level: number;
     isstaff: boolean;
+    bugfinder: boolean;
 }
 
-export default function Badges({ level, isstaff,  }: BadgesProps){
+export default function Badges({ level, isstaff, bugfinder }: BadgesProps){
     // find out how many badges there are
     // if there are 2 badges, render both
     // if there is 1 badge, render that one
@@ -19,7 +20,7 @@ export default function Badges({ level, isstaff,  }: BadgesProps){
 
     return(
         <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex border gap-2 px-2 py-0.5 rounded-md bg-neutral-400/20">
+            <div className="flex border flex-row gap-2 px-2 py-0.5 rounded-md bg-neutral-400/20">
             {isstaff && (
                 <TooltipProvider>
                     <Tooltip>
@@ -34,7 +35,20 @@ export default function Badges({ level, isstaff,  }: BadgesProps){
                     </Tooltip>
                 </TooltipProvider>
             )}
-
+            {bugfinder && (
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <img src="/bugfinder.png" className="h-6 w-6" />
+                        </TooltipTrigger>
+                        <TooltipContent className="dark:bg-black border dark:border-neutral-950">
+                            <div className=" dark:border-neutral-950">
+                                <p className="text-sm text-white">Bug Finder</p>
+                            </div>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+                )}
             </div>
         </div>
     )
