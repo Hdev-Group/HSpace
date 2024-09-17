@@ -137,7 +137,7 @@ export default function Badges({ level, isstaff, bugfinder, securitybugfinder, o
         <div className="flex flex-row justify-start items-center gap-4 relative">
             <div
                 className={`flex border flex-row gap-2 px-2 py-0.5 rounded-md overflow-hidden right-0 top-0 flex-nowrap absolute h-auto bg-neutral-400/20 transition-[width] duration-300 ease-in-out`}
-                style={{ width: `${isHovered ? hoveredBadgeWidth : badgeWidth}px` }} // Dynamically setting the width based on hover state
+                style={{ width: `${isHovered ? hoveredBadgeWidth : badgeWidth}px` }} 
                 onMouseEnter={() => setIsHovered(true)} // Hover effect starts
                 onMouseLeave={() => setIsHovered(false)} // Hover effect ends
             >

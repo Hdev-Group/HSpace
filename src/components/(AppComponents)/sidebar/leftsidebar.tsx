@@ -13,13 +13,13 @@ export default function LeftSidebar() {
       setIsLoading(false)
     }
   } , [user])
-  if (!user) return null;
+
   return (
     <div className={`flex sticky mt-8 top-[59px] z-20 h-full`}>
       <aside className="w-64 md:flex hidden flex-col space-y-6 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 rounded-r-lg rounded-l-sm overflow-hidden shadow-lg">
             <>
               <div className="flex flex-col items-center text-center">
-                <Link className="relative flex justify-center w-full" href="/profile/userid">
+                <Link className="relative flex justify-center w-full" href={`/profile/${user?.id}`}>
                   <div className="w-full h-20 absolute">
                     {
                       isLoading && <div className="animate-pulse w-full h-20 bg-gray-900 rounded-t-lg"></div> ||
@@ -33,10 +33,10 @@ export default function LeftSidebar() {
                 </Link>
                 <div className="px-4 gap-0.5 w-full flex flex-col items-center">
                   <h2 className={`mt-2 text-lg font-bold ${isLoading ? "animate-pulse" : ""}`}>{user?.firstName} {user?.lastName}</h2>
-                  <a className="text-sm mt-[-4px] font-semibold text-gray-400" href="/profile/userid">@{user?.username}</a>
-                  <p className="text-sm text-gray-400">
+                  <a className="text-sm mt-[-4px] font-semibold text-gray-400" href={`/profile/${user?.id}`}>@{user?.username}</a>
+                  <div className="text-sm text-gray-400">
                     {isLoading && <div className="animate-pulse w-[120px] bg-neutral-500/20 rounded-lg  px-5 py-3"></div> || <span>Lead Developer & Founder @ Hdev Group | Full Stack Development | Software Security Engineer</span>}
-                  </p>
+                  </div>
                   <div className="flex flex-row mt-4 w-full justify-between">
                     <div className="px-3 py-1 bg-blue-600 rounded-full text-xs font-semibold">
                         Level 42 DevWizard
@@ -52,7 +52,6 @@ export default function LeftSidebar() {
                   Commit Streak: <span className="font-bold text-green-400">🔥 28 days</span>
                 </p>
               </div>
-      
               <nav>
                 <ul className="space-y-2 px-4 items-start flex flex-col justify-start">
                   <li className="w-full">
@@ -114,5 +113,5 @@ export default function LeftSidebar() {
       </aside>
     </div>
   )
-  if (!user) return null;
+
 }

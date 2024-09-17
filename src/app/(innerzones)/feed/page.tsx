@@ -3,12 +3,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import Header from "../../../../components/(AppComponents)/header/header"
-import LeftSidebar from "../../../../components/(AppComponents)/sidebar/leftsidebar"
+import Header from "../../../components/(AppComponents)/header/header"
+import LeftSidebar from "../../../components/(AppComponents)/sidebar/leftsidebar"
 import { useUser } from "@clerk/clerk-react";
 
 export default function FeedPage() {
-
   return (
     <>
     <head>
@@ -101,8 +100,6 @@ function MessageSquareIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 function MakePost() {
-  const { user } = useUser();
-  if (!user) return null
   return(
   <div className="bg-white dark:bg-gray-800 flex flex-row rounded-lg shadow mb-6 p-4 pb-3">
     <img src="/1720299869628.jpeg" className="rounded-full" height="40" width="40" />

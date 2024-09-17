@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Github, Linkedin, Twitter, User,Star, Award,UserIcon,CalendarIcon,InfoIcon, Verified, Edit, MapPin, Calendar, MapPinIcon, BuildingIcon } from "lucide-react"
-import Badges from "../../../../../components/(AppComponents)/badges/badges"
-import Header from "../../../../../components/(AppComponents)/header/header"
-import type { ProjectCard } from "../../../../../types/types"
-import { VerifiedBadge } from "../../../../../components/(AppComponents)/badges/badges"
+import Badges from "../../../../components/(AppComponents)/badges/badges"
+import Header from "../../../../components/(AppComponents)/header/header"
+import type { ProjectCard } from "../../../../types/types"
+import { VerifiedBadge } from "../../../../components/(AppComponents)/badges/badges"
 import {
   Dialog,
   DialogContent,
@@ -15,8 +15,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { useEffect, useState } from "react"
 
-export default function ProfilePage() {
+
+export default function ProfilePage({ params }: { params: {userid: string }}) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(null);
+  const urlid = params.userid
+
+  useEffect(() => {
+    async function fetchAssigneeData() {
+        if (urlid) {
+            try {
+                const response = await fetch(`/api/get-user?userId=${urlid}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error('Error fetching assignee data:', error);
+                setUserData(null);
+            } finally {
+              setIsLoading(false);
+            }
+        }
+    }
+
+    fetchAssigneeData();
+}, [urlid]);
+
+console.log(userData)
 
   function viewdetails() {
     console.log('Viewing details')
@@ -26,6 +55,10 @@ export default function ProfilePage() {
   }
   function EditAbout() {
     console.log('Editing about')
+  }
+  function joinDateCalc() {
+    const date = new Date(userData?.userdetails.createdAt);
+    return date.toLocaleString('default', { month: 'long' }) + ' ' + date.getFullYear();
   }
 
   return (
@@ -44,11 +77,11 @@ export default function ProfilePage() {
                     <img
                       src="/placeholder/image_2024-08-17_19-24-08.png"
                       alt="Profile cover"
-                      className="w-full h-62 object-fill rounded-t-lg"
+                      className={`w-full h-62 object-fill rounded-t-lg ${isLoading ? "animate-pulse" : ""}`}
                     />
                     <div className="absolute -bottom-16 left-4 md:left-8">
-                      <Avatar className="h-32 w-32 border-4 border-gray-800">
-                        <AvatarImage src="/1720299869628.jpeg" alt="Harry Campbell" className="h-32 w-32" />
+                      <Avatar className={`h-32 w-32 border-4 border-gray-800 bg-neutral-400 ${isLoading ? "animate-pulse" : ""}`}>
+                        <AvatarImage src={userData?.userdetails.imageUrl} alt={`${userData?.userdetails.firstName} ${userData?.userdetails.lastName}`} className={`h-32 w-32`} />
                       </Avatar>
                     </div>
                   </div>
@@ -58,33 +91,32 @@ export default function ProfilePage() {
                         <p className="text-3xl font-bold flex items-center gap-2">
                         <Dialog>
                         <DialogTrigger asChild>
-                          <span className="hover:bg-neutral-500/30  cursor-pointer py-0.5 rounded-md">Harry Campbell</span>
-
+                          <span className="hover:bg-neutral-500/30  cursor-pointer py-0.5 rounded-md">{userData?.userdetails.firstName} {userData?.userdetails.lastName}</span>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle>Harry Campbell</DialogTitle>
+          <DialogTitle>{userData?.userdetails.firstName} {userData?.userdetails.lastName}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-start px-4 space-y-4 pt-4">
           <Avatar className="h-24 w-24">
-            <AvatarImage src="/1720299869628.jpeg" alt="Harry Campbell" />
+            <AvatarImage src="/1720299869628.jpeg" alt={`${userData?.userdetails.firstName} ${userData?.userdetails.lastName}`} />
             <AvatarFallback>HC</AvatarFallback>
           </Avatar>
-          <p className="text-2xl font-bold">Harry Campbell</p>
+          <p className="text-2xl font-bold">{userData?.userdetails.firstName} {userData?.userdetails.lastName}</p>
         </div>
         <div className="grid gap-4 py-4">
           <div className="flex items-center space-x-4">
             <UserIcon className="h-5 w-5 text-gray-500" />
             <div>
               <p className="text-sm font-medium text-gray-500">Username</p>
-              <p className="text-sm">@harry</p>
+              <p className="text-sm">@{userData?.userdetails.username}</p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
             <div>
               <p className="text-sm font-medium text-gray-500">Joined</p>
-              <p className="text-sm">September 2024</p>
+              <p className="text-sm">{joinDateCalc()}</p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -98,7 +130,7 @@ export default function ProfilePage() {
       </DialogContent>
     </Dialog> <VerifiedBadge />
                         </p>
-                        <p className="text-muted-foreground text-lg">@harry</p>
+                        <p className="text-muted-foreground text-lg">@{userData?.userdetails.username}</p>
                         <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> England</span>
                           <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined September 2024</span>
