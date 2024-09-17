@@ -4,14 +4,18 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useState } from "react";
 
 interface BadgesProps {
     level: number;
     isstaff: boolean;
     bugfinder: boolean;
+    securitybugfinder: boolean;
+    opensourcelead: boolean;
+    earlyadopter: boolean;
 }
 
-export default function Badges({ level, isstaff, bugfinder }: BadgesProps) {
+export default function Badges({ level, isstaff, bugfinder, securitybugfinder, opensourcelead, earlyadopter }: BadgesProps) {
     function BugFinderBadge() {
         return (
             <TooltipProvider>
@@ -114,23 +118,34 @@ export default function Badges({ level, isstaff, bugfinder }: BadgesProps) {
         );
     }
 
+    const [isHovered, setIsHovered] = useState(false);
+
     // Array to hold badge components based on props
     const badges = [
         isstaff && <StaffBadge key="staff" />,
-        <SecurityBugFinder key="security" />,
-        <OpenSourceLeader key="opensource" />,
+        securitybugfinder && <SecurityBugFinder key="securitybugfinder" />,
+        opensourcelead && <OpenSourceLeader key="opensource" />,
         bugfinder && <BugFinderBadge key="bugfinder" />,
-        <EarlyAdopter key="early" />,
+        earlyadopter && <EarlyAdopter key="early" />,
     ].filter(Boolean);
+
+    const totalbadges = badges.length;
+    const badgeWidth = Math.min(totalbadges, 2) * 38 + 10; // max 2 badges by default
+    const hoveredBadgeWidth = totalbadges * 38 + 10; // full width when hovered
 
     return (
         <div className="flex flex-row justify-start items-center gap-4 relative">
-            <div className="flex border flex-row gap-2 px-2 py-0.5 rounded-md overflow-hidden right-0 top-0 flex-nowrap absolute w-[85px] hover:w-[200px] h-auto bg-neutral-400/20 transition-[width] duration-300 ease-in-out">
+            <div
+                className={`flex border flex-row gap-2 px-2 py-0.5 rounded-md overflow-hidden right-0 top-0 flex-nowrap absolute h-auto bg-neutral-400/20 transition-[width] duration-300 ease-in-out`}
+                style={{ width: `${isHovered ? hoveredBadgeWidth : badgeWidth}px` }} // Dynamically setting the width based on hover state
+                onMouseEnter={() => setIsHovered(true)} // Hover effect starts
+                onMouseLeave={() => setIsHovered(false)} // Hover effect ends
+            >
                 {badges}
             </div>
         </div>
     );
-}
+}   
 
 export function VerifiedBadge() {
     return (

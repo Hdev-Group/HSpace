@@ -115,7 +115,7 @@ export default function ProfilePage() {
                           <Button className="bg-blue-600 hover:bg-blue-700 text-white">Follow</Button>
                           <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">Message</Button>
                         </div>
-                        <Badges level={26} isstaff={true} bugfinder={true} />
+                        <Badges level={26} isstaff={true} bugfinder={true} securitybugfinder={true} opensourcelead={false} earlyadopter={true} />
                       </div>
                     </div>
                     <div className="flex gap-4 mt-6">
