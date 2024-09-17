@@ -44,7 +44,7 @@ export default function ProfilePage() {
                     <img
                       src="/placeholder/image_2024-08-17_19-24-08.png"
                       alt="Profile cover"
-                      className="w-full h-64 object-cover rounded-t-lg"
+                      className="w-full h-62 object-fill rounded-t-lg"
                     />
                     <div className="absolute -bottom-16 left-4 md:left-8">
                       <Avatar className="h-32 w-32 border-4 border-gray-800">
@@ -144,7 +144,7 @@ export default function ProfilePage() {
                   <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-base text-gray-600 dark:text-gray-300">Harry is a full stack software engineer with over 5 years of experience in building scalable web applications. He specializes in React, TypeScript, and Node.js, and has a passion for creating intuitive user interfaces and robust backend systems.</p>
+                  <p className="text-base text-gray-600 dark:text-gray-300">Harry is a full stack software engineer with over 4 years of experience in building scalable web applications. He specializes in React, TypeScript, and Node.js, and has a passion for creating intuitive user interfaces and robust backend systems.</p>
                   <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-6"/>
                   <h3 className="text-xl font-semibold mb-4">Top Skills</h3>
                   <div className="flex flex-wrap gap-2">
