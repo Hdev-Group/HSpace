@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Github, Linkedin, Twitter, User,Star, Award,UserIcon,CalendarIcon,InfoIcon, Verified, Edit, MapPin, Calendar, MapPinIcon, BuildingIcon } from "lucide-react"
-import Badges from "../../../../components/(AppComponents)/badges/badges"
+import { Github, Linkedin, Twitter,Star, Award,UserIcon,CalendarIcon,InfoIcon, Verified, Edit, MapPin, Calendar, MapPinIcon, BuildingIcon } from "lucide-react"
+import {ProfileBadges} from "../../../../components/(AppComponents)/badges/badges"
 import Header from "../../../../components/(AppComponents)/header/header"
 import type { ProjectCard } from "../../../../types/types"
 import { VerifiedBadge } from "../../../../components/(AppComponents)/badges/badges"
@@ -16,42 +16,61 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useEffect, useState } from "react"
-
+import { useUser } from "@clerk/clerk-react"
+import { api } from '../../../../../convex/_generated/api';
+import { useQuery } from "convex/react";
+import { EditProfileModal } from "../../../../components/(AppComponents)/modals/modals"
 
 export default function ProfilePage({ params }: { params: {userid: string }}) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
+  const [isModalProfile, setIsModalOpen] = useState(false);
+  console.log(isModalProfile)
+  const useUsers = useUser();
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
   const urlid = params.userid
+
+  const userinformation = useQuery(api.users.user, { id: urlid });
 
   useEffect(() => {
     async function fetchAssigneeData() {
-        if (urlid) {
-            try {
-                const response = await fetch(`/api/get-user?userId=${urlid}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setUserData(data);
-            } catch (error) {
-                console.error('Error fetching assignee data:', error);
-                setUserData(null);
-            } finally {
-              setIsLoading(false);
-            }
+      if (urlid) {
+        try {
+          const response = await fetch(`/api/get-user?userId=${urlid}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log(data);
+          setUserData(data);
+        } catch (error) {
+          console.error('Error fetching assignee data:', error);
+          setUserData(null);
+        } finally {
+          setIsLoading(false);
         }
+      }
     }
 
     fetchAssigneeData();
-}, [urlid]);
+  }, [urlid]);
 
-console.log(userData)
+const UserId = useUsers?.user?.id;
+const location = userinformation?.country
+const badges = userinformation?.badges
+const title = userinformation?.title
+const about = userinformation?.about
+const topskills = userinformation?.topskills
+
+const verified = badges?.includes("verified");
 
   function viewdetails() {
     console.log('Viewing details')
   }
   function EditProfile() {
-    console.log('Editing profile')
+    setIsModalOpen(true)
   }
   function EditAbout() {
     console.log('Editing about')
@@ -128,26 +147,34 @@ console.log(userData)
           </div>
         </div>
       </DialogContent>
-    </Dialog> <VerifiedBadge />
+    </Dialog> <VerifiedBadge isverified={verified} />
                         </p>
                         <p className="text-muted-foreground text-lg">@{userData?.userdetails.username}</p>
                         <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> England</span>
+                          {
+                            location && (
+                              <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {location}</span>
+                            )
+                          }
                           <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined September 2024</span>
                         </div>
-                        <p className="mt-4 max-w-xl text-base leading-relaxed">Full-stack developer passionate about TypeScript, React, and building developer tools. Open source enthusiast and community builder.</p>
+                        <p className="mt-4 max-w-xl text-base leading-relaxed">{title}</p>
                         <div className="flex flex-row gap-4 mt-4">
                           <p className="text-blue-600 dark:text-blue-400 font-medium">Followers <span className="font-bold">500+</span></p>
                           <p className="text-blue-600 dark:text-blue-400 font-medium">Friends <span className="font-bold">127</span></p>
                         </div>
                       </div>
                       <div className="flex mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
-                        <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                      {
+                        UserId === urlid && <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                      }
                         <div className="flex flex-row gap-2  items-end justify-end">
                           <Button className="bg-blue-600 hover:bg-blue-700 text-white">Follow</Button>
                           <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">Message</Button>
                         </div>
-                        <Badges level={26} isstaff={true} bugfinder={true} securitybugfinder={true} opensourcelead={false} earlyadopter={true} />
+                        {
+                          !badges?.includes("verified") || badges && <ProfileBadges badgetypes={badges} />
+                        }
                       </div>
                     </div>
                     <div className="flex gap-4 mt-6">
@@ -170,30 +197,41 @@ console.log(userData)
                   </div>
                 </CardContent>
               </Card>
-              <Card className="bg-white dark:bg-gray-800 shadow-md">
+              {
+                (about || topskills) && 
+                <Card className="bg-white dark:bg-gray-800 shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <p className="text-2xl font-semibold">About</p>
-                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  {
+                    about ? (<p className="text-2xl font-semibold">About</p>) : (<p className="text-2xl font-semibold">Top Skills</p> || about && topskills && <p className="text-2xl font-semibold">About</p>)
+                  }
+                  {
+                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  }
                 </CardHeader>
                 <CardContent>
-                  <p className="text-base text-gray-600 dark:text-gray-300">Harry is a full stack software engineer with over 4 years of experience in building scalable web applications. He specializes in React, TypeScript, and Node.js, and has a passion for creating intuitive user interfaces and robust backend systems.</p>
-                  <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-6"/>
-                  <h3 className="text-xl font-semibold mb-4">Top Skills</h3>
+                  {about &&
+                    <>
+                      <p className="text-base text-gray-600 dark:text-gray-300">{about}</p>
+                      {topskills && <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-4"/>}
+                    </>
+                  }
+                  {topskills && about ? (<h3 className="text-xl font-semibold mb-4">Top Skills</h3>) : null}
                   <div className="flex flex-wrap gap-2">
-                    <SkillBadge name="React" />
-                    <SkillBadge name="TypeScript" />
-                    <SkillBadge name="Next.js" />
-                    <SkillBadge name="TailwindCSS" />
-                    <SkillBadge name="Node.js" />
-                    <SkillBadge name="GraphQL" />
-                    <SkillBadge name="AWS" />
+                    {
+                      topskills?.map((skill: string) => (
+                        <SkillBadge key={skill} name={skill} />
+                      ))
+                    }
                   </div>
                 </CardContent>
               </Card>
+              }
               <Card className="bg-white dark:bg-gray-800 shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <p className="text-2xl font-semibold">Work</p>
-                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  {
+                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  }
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col gap-6">
@@ -211,7 +249,9 @@ console.log(userData)
               <Card className="bg-white dark:bg-gray-800 shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <p className="text-2xl font-semibold">Projects</p>
-                  <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  {
+                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                  }
                 </CardHeader>
                 <CardContent>
                   <ProjectShower />
@@ -220,7 +260,9 @@ console.log(userData)
               <Card className="bg-white dark:bg-gray-800 shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <p className="text-2xl font-semibold">Licenses & Certifications</p>
-                    <button className="p-1 rounded-full flex items-center justify-center px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                    {
+                    UserId === urlid && <button className="p-1 rounded-full flex items-center justify-center px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                    }
                   </CardHeader>
                 <CardContent>
                   <div className="flex flex-col gap-6">
@@ -296,6 +338,9 @@ console.log(userData)
             </main>
           </div>
         </div>
+        {
+          isModalProfile && <EditProfileModal user={userData} useridentify={params.userid} closeModal={handleClose} />
+        }
       </body>
     </>
   )
@@ -310,7 +355,7 @@ function ProjectShower() {
         link=""
         type="In Progress"
         technology={['Next.js', 'TailwindCSS', 'TypeScript', 'Convex', 'AWS', 'Node.js']}
-        image="/Untitled design (7).png"
+        image="/placeholder/image_2024-08-17_19-24-08.png"
       />
       <ProjectCard 
         title="HProjects"
@@ -318,7 +363,7 @@ function ProjectShower() {
         link="https://hprojects.hdev.uk"
         type="Completed"
         technology={['Next.js', 'TailwindCSS', 'TypeScript', 'Convex', 'AWS', 'Node.js']}
-        image="/placeholder.svg?height=200&width=400"
+        image="/placeholder/image_2024-08-17_19-24-08.png"
       />
     </div>
   )

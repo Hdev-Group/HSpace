@@ -84,7 +84,9 @@ export default function Header(currenttab: any) {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Profile</DropdownMenuItem>
+                          <Link href={`/profile/${user.id}`}>
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                          </Link>
                           <DropdownMenuItem>Settings</DropdownMenuItem>
                           <DropdownMenuItem>Log out</DropdownMenuItem>
                         </DropdownMenuContent>

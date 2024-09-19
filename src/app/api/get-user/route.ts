@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { LRUCache } from "lru-cache";
 import { getAuth } from '@clerk/nextjs/server';
 
+
 interface CacheEntry {
   userId: string;
   data: any; 
@@ -18,6 +19,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userIda = searchParams.get("userId");
 
+
   const { userId } = getAuth(request);
   if (!userId || !userIda) {
     return NextResponse.json({ error: !userId ? 'Unauthorized' : 'Invalid userId' }, { status: !userId ? 401 : 400 });
@@ -29,7 +31,7 @@ export async function GET(request: NextRequest) {
     const { firstName, lastName, id, imageUrl, username, createdAt } = cachedUser.data;
     return NextResponse.json({ 
       id: id, 
-      userdetails: { firstName, lastName, imageUrl, username, createdAt } 
+      userdetails: { firstName, lastName, imageUrl, username, createdAt },
     });
   }
 
@@ -43,7 +45,7 @@ export async function GET(request: NextRequest) {
     const { id, firstName, lastName, imageUrl, username, createdAt } = user;
     return NextResponse.json({ 
       id: id, 
-      userdetails: { firstName, lastName, imageUrl, username, createdAt } 
+      userdetails: { firstName, lastName, imageUrl, username, createdAt },
     });
   } catch (error) {
     console.error("Error fetching user data:", error);

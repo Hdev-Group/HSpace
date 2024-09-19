@@ -1,4 +1,4 @@
-import { internalMutation, query, QueryCtx } from "./_generated/server";
+import { internalMutation, query, QueryCtx, mutation } from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 import { v, Validator } from "convex/values";
 
@@ -61,3 +61,25 @@ async function userByExternalId(ctx: QueryCtx, externalId: string) {
         .withIndex("byExternalId", (q) => q.eq("externalId", externalId))
         .unique();
 }
+export const user = query({
+  args: { id: v.string() },
+  handler: async (ctx, { id }: any) => {
+    return await ctx.db
+    .query("users")
+    .withIndex("byExternalId", (q) => q.eq("externalId", id))
+    .unique()
+  },
+});
+
+export const update = mutation({
+  args: { id: v.string(), data: v.any() },
+  handler: async (ctx, { id, data }: any) => {
+    let validId = ctx.db.normalizeId("users", id);
+    if (validId !== null) {
+      return await ctx.db.patch(validId, data);
+    }
+    else {
+      throw new Error('Invalid User ID');
+    }
+  },
+});

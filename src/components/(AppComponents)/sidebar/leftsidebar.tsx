@@ -4,6 +4,7 @@ import { Code, Users, Calendar, Hash, Cpu, Bookmark } from "lucide-react"
 import { useUser } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState } from "react";
+import {SideBarBadges} from "@/components/(AppComponents)/badges/badges"
 
 export default function LeftSidebar() {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,14 +38,7 @@ export default function LeftSidebar() {
                   <div className="text-sm text-gray-400">
                     {isLoading && <div className="animate-pulse w-[120px] bg-neutral-500/20 rounded-lg  px-5 py-3"></div> || <span>Lead Developer & Founder @ Hdev Group | Full Stack Development | Software Security Engineer</span>}
                   </div>
-                  <div className="flex flex-row mt-4 w-full justify-between">
-                    <div className="px-3 py-1 bg-blue-600 rounded-full text-xs font-semibold">
-                        Level 42 DevWizard
-                    </div>
-                    <div className="px-3 py-1 bg-purple-700 rounded-full text-xs font-semibold">
-                        Staff
-                    </div>
-                  </div>
+
                 </div>
               </div>
               <div className="border-t px-4 border-gray-700 pt-4">
