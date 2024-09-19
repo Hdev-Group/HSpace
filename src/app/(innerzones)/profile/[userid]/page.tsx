@@ -29,6 +29,7 @@ export default function ProfilePage({ params }: { params: {userid: string }}) {
   const useUsers = useUser();
   const handleClose = () => {
     setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
   };
   const urlid = params.userid
 
@@ -57,12 +58,16 @@ export default function ProfilePage({ params }: { params: {userid: string }}) {
     fetchAssigneeData();
   }, [urlid]);
 
+console.log(userinformation)
 const UserId = useUsers?.user?.id;
 const location = userinformation?.country
 const badges = userinformation?.badges
 const title = userinformation?.title
 const about = userinformation?.about
 const topskills = userinformation?.topskills
+const github = userinformation?.github
+const twitter = userinformation?.twitter
+const linkedin = userinformation?.linkedin
 
 const verified = badges?.includes("verified");
 
@@ -164,7 +169,7 @@ const verified = badges?.includes("verified");
                           <p className="text-blue-600 dark:text-blue-400 font-medium">Friends <span className="font-bold">127</span></p>
                         </div>
                       </div>
-                      <div className="flex mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
+                      <div className="flex mt-5 md:mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
                       {
                         UserId === urlid && <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                       }
@@ -178,21 +183,30 @@ const verified = badges?.includes("verified");
                       </div>
                     </div>
                     <div className="flex gap-4 mt-6">
-                      <a href="https://github.com/harrycampbell" target="_blank" rel="noopener noreferrer">
+                      {
+                        github && 
+                        <a href={github} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
                           <Github className="h-5 w-5" />
                         </Button>
                       </a>
-                      <a href="https://twitter.com/harrycampbell" target="_blank" rel="noopener noreferrer">
+                      }
+                      {
+                        twitter && 
+                      <a href={twitter} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
                           <Twitter className="h-5 w-5" />
                         </Button>
                       </a>
-                      <a href="https://linkedin.com/in/harrycampbell" target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
-                          <Linkedin className="h-5 w-5" />
-                        </Button>
-                      </a>
+                        }
+                        {
+                          linkedin &&
+                          <a href={linkedin} target="_blank" rel="noopener noreferrer">
+                          <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
+                            <Linkedin className="h-5 w-5" />
+                          </Button>
+                        </a>
+                        }
                     </div>
                   </div>
                 </CardContent>

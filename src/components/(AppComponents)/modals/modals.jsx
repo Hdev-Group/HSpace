@@ -24,6 +24,9 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
     city: "",
     countryLabel: "",
     username: "",
+    linkedin: "",
+    twitter: "",
+    github: "",
   });
 
   const options = countryList().getData().map(country => ({
@@ -42,6 +45,9 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
         city: getuserdata.city || "",
         countryLabel: getuserdata.countryLabel || "",
         username: user?.userdetails.username || "",
+        linkedin: getuserdata.linkedin || "",
+        twitter: getuserdata.twitter || "",
+        github: getuserdata.github || "",
       });
     }
   }, [getuserdata, user]);
@@ -109,6 +115,9 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
             postcode: formData.postcode,
             city: formData.city,
             countryLabel: formData.countryLabel,
+            linkedin: formData.linkedin,
+            twitter: formData.twitter,
+            github: formData.github,
           },
         });
         closeModal();
@@ -226,6 +235,38 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
                   />
                 </div>
               </div>
+              <div className="flex flex-col gap-4">
+                <h1 className="font-semibold text-lg mt-5">Socials</h1>
+                <div className="flex flex-col gap-0.5 holdatter relative">
+                  <label className="text-sm text-gray-300">Linkedin</label>                
+                  <span class="input-prefix mt-2">linkedin.com/in/</span>
+                  <Input 
+                    id="linkedin" 
+                    name="linkedin" 
+                    className="border border-neutral-300 pl-[125px] input-fielder flex items-center justify-center" 
+                    onChange={handleInputChange} 
+                    value={formData.linkedin}
+                  />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                  <label className="text-sm text-gray-300">Twitter</label>
+                  <Input 
+                    id="twitter" 
+                    name="twitter" 
+                    className="border border-neutral-300" 
+                    onChange={handleInputChange} 
+                  />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                  <label className="text-sm text-gray-300">GitHub</label>
+                  <Input 
+                    id="github" 
+                    name="github" 
+                    className="border border-neutral-300" 
+                    onChange={handleInputChange} 
+                  />
+                </div>
+                </div>
           </div>
           <div className="flex flex-row justify-end w-full items-center px-4 py-3 border-t border-gray-50/20">
             <button

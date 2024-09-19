@@ -37,7 +37,7 @@ export default function Header(currenttab: any) {
     <header className="mx-auto fixed backdrop-blur-lg px-14 w-full flex flex-row z-50 border-neutral-800 bg-neutral-800/40 border-b items-center justify-center">
       <div className="container relative flex h-14 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
-          <Link className="mr-6 flex items-center space-x-2" href="/feed">
+          <Link className="mr-6 flex items-center space-x-2 w-[36px] h-[36px]" href="/feed">
             <Image src="/logo.png" alt="Logo" width={36} height={36} />
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">

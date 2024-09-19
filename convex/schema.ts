@@ -9,7 +9,6 @@ users: defineTable({
   city: v.optional(v.string()),
   badges: v.optional(v.array(v.string())),
   title: v.optional(v.string()),
-  socials: v.optional(v.array(v.string())),
   about: v.optional(v.string()),
   topskills: v.optional(v.array(v.string())),
   worksid: v.optional(v.array(v.string())),
@@ -17,6 +16,9 @@ users: defineTable({
   certifiationsid: v.optional(v.array(v.string())),
   reputationids: v.optional(v.array(v.string())),
   countryLabel: v.optional(v.string()),
+  github: v.optional(v.string()),
+  linkedin: v.optional(v.string()),
+  twitter: v.optional(v.string()),
   // this the Clerk ID, stored in the subject JWT field
   externalId: v.string(),
 }).index("byExternalId", ["externalId"]),
