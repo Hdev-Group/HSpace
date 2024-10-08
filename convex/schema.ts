@@ -1,5 +1,7 @@
+import { time } from "console";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { act } from "react";
 
 export default defineSchema({
 users: defineTable({
@@ -21,7 +23,15 @@ users: defineTable({
   twitter: v.optional(v.string()),
   // this the Clerk ID, stored in the subject JWT field
   externalId: v.string(),
-}).index("byExternalId", ["externalId"]),
+  moderationid: v.optional(v.string()),
+}).index("byExternalId", ["externalId"]).index("byName", ["name"]),
+moderation: defineTable({
+  status: v.string(),
+  reason: v.optional(v.string()),
+  action: v.optional(v.string()),
+  time: v.optional(v.string()),
+  userid: v.string(),
+}).index("byUser", ["userid"]),
 socials: defineTable({
     name: v.string(),
     link: v.string(),

@@ -20,9 +20,8 @@ export async function GET(request: NextRequest) {
   const userIda = searchParams.get("userId");
 
 
-  const { userId } = getAuth(request);
-  if (!userId || !userIda) {
-    return NextResponse.json({ error: !userId ? 'Unauthorized' : 'Invalid userId' }, { status: !userId ? 401 : 400 });
+  if ( !userIda) {
+    return NextResponse.json({ error: 'Invalid userId' }, { status: 400 });
   }
 
   // Check cache first

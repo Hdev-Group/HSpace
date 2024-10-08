@@ -4,9 +4,18 @@ import Header from "../../components/(noneAppComponents)/header/indexHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Code, Users, Briefcase } from "lucide-react";
-
+import { useUser } from "@clerk/clerk-react"
+import { useEffect } from "react";
 
 export default function Home() {
+
+  const { isLoaded, isSignedIn } = useUser();
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      window.location.href = "/feed";
+    }
+  }, [isLoaded, isSignedIn]);
 
   return (
     <div className="min-h-screen bg-background pb-20 text-foreground dark:bg-gray-950 dark:text-gray-100">

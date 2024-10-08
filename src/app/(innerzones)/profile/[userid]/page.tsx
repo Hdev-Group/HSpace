@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Github, Linkedin, Twitter,Star, Award,UserIcon,CalendarIcon,InfoIcon, Verified, Edit, MapPin, Calendar, MapPinIcon, BuildingIcon } from "lucide-react"
+import { Github, Linkedin, Twitter,Star, Award,UserIcon,CalendarIcon,InfoIcon,Flag, Verified, Edit, MapPin, Calendar, MapPinIcon,Ban, BuildingIcon, Ellipsis } from "lucide-react"
 import {ProfileBadges} from "../../../../components/(AppComponents)/badges/badges"
 import Header from "../../../../components/(AppComponents)/header/header"
 import type { ProjectCard } from "../../../../types/types"
@@ -15,20 +15,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from "react"
 import { useUser } from "@clerk/clerk-react"
 import { api } from '../../../../../convex/_generated/api';
 import { useQuery } from "convex/react";
-import { EditProfileModal } from "../../../../components/(AppComponents)/modals/modals"
+import { EditProfileModal, EditProfileSectionsModal, EditAboutSection} from "../../../../components/(AppComponents)/modals/modals"
 
 export default function ProfilePage({ params }: { params: {userid: string }}) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
   const [isModalProfile, setIsModalOpen] = useState(false);
+  const [isEditSections, setEditProfileSections] = useState(false);
+  const [isEditAbout, setEditAboutSection] = useState(false);
   console.log(isModalProfile)
   const useUsers = useUser();
   const handleClose = () => {
     setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
+  };
+  const handleCloseEditSection = () => {
+    setEditProfileSections(false);
+    document.body.style.overflow = 'auto';
+  };
+  const closehandEditAboutSection = () => {
+    setEditAboutSection(false);
     document.body.style.overflow = 'auto';
   };
   const urlid = params.userid
@@ -77,12 +95,18 @@ const verified = badges?.includes("verified");
   function EditProfile() {
     setIsModalOpen(true)
   }
+  function EditProfileSections(){
+    setEditProfileSections(true);
+  }
   function EditAbout() {
-    console.log('Editing about')
+    setEditAboutSection(true);
   }
   function joinDateCalc() {
     const date = new Date(userData?.userdetails.createdAt);
     return date.toLocaleString('default', { month: 'long' }) + ' ' + date.getFullYear();
+  }
+  function ReportUser(userid: string) {
+    console.log(`Reporting user ${userid}`)
   }
 
   return (
@@ -95,6 +119,7 @@ const verified = badges?.includes("verified");
         <div className="flex w-full h-auto justify-center items-center flex-col">
           <div className="flex flex-row relative max-w-[900px] mt-10 pb-10 w-full justify-center">
             <main className="flex flex-col w-full overflow-none gap-5 justify-center max-w-[1020px]">
+              <section id="#">
               <Card className="w-full mt-8 bg-white dark:bg-gray-800 shadow-lg">
                 <CardContent className="p-0">
                   <div className="relative">
@@ -116,244 +141,287 @@ const verified = badges?.includes("verified");
                         <Dialog>
                         <DialogTrigger asChild>
                           <span className="hover:bg-neutral-500/30  cursor-pointer py-0.5 rounded-md">{userData?.userdetails.firstName} {userData?.userdetails.lastName}</span>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] dark:bg-gray-900">
-        <DialogHeader>
-          <DialogTitle>{userData?.userdetails.firstName} {userData?.userdetails.lastName}</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col items-start px-4 space-y-4 pt-4">
-          <Avatar className="h-24 w-24">
-            <AvatarImage src="/1720299869628.jpeg" alt={`${userData?.userdetails.firstName} ${userData?.userdetails.lastName}`} />
-            <AvatarFallback>HC</AvatarFallback>
-          </Avatar>
-          <p className="text-2xl font-bold">{userData?.userdetails.firstName} {userData?.userdetails.lastName}</p>
-        </div>
-        <div className="grid gap-4 py-4">
-          <div className="flex items-center space-x-4">
-            <UserIcon className="h-5 w-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium text-gray-500">Username</p>
-              <p className="text-sm">@{userData?.userdetails.username}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium text-gray-500">Joined</p>
-              <p className="text-sm">{joinDateCalc()}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <InfoIcon className="h-5 w-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium text-gray-500">Last Updated</p>
-              <p className="text-sm">Less than 1 month ago</p>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog> <VerifiedBadge isverified={verified} />
-                        </p>
-                        <p className="text-muted-foreground text-lg">@{userData?.userdetails.username}</p>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] dark:bg-gray-900">
+                          <DialogHeader>
+                            <DialogTitle>{userData?.userdetails.firstName} {userData?.userdetails.lastName}</DialogTitle>
+                          </DialogHeader>
+                          <div className="flex flex-col items-start px-4 space-y-4 pt-4">
+                            <Avatar className="h-24 w-24">
+                              <AvatarImage src="/1720299869628.jpeg" alt={`${userData?.userdetails.firstName} ${userData?.userdetails.lastName}`} />
+                              <AvatarFallback>HC</AvatarFallback>
+                            </Avatar>
+                            <p className="text-2xl font-bold">{userData?.userdetails.firstName} {userData?.userdetails.lastName}</p>
+                          </div>
+                          <div className="grid gap-4 py-4">
+                            <div className="flex items-center space-x-4">
+                              <UserIcon className="h-5 w-5 text-gray-500" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Username</p>
+                                <p className="text-sm">@{userData?.userdetails.username}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                              <CalendarIcon className="h-5 w-5 text-gray-500" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Joined</p>
+                                <p className="text-sm">{joinDateCalc()}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                              <InfoIcon className="h-5 w-5 text-gray-500" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-500">Last Updated</p>
+                                <p className="text-sm">Less than 1 month ago</p>
+                              </div>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog> <VerifiedBadge isverified={verified} />
+                          </p>
+                          <p className="text-muted-foreground text-lg">@{userData?.userdetails.username}</p>
+                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                            {
+                              location && (
+                                <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {location}</span>
+                              )
+                            }
+                            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined September 2024</span>
+                          </div>
+                          <p className="mt-4 max-w-xl text-base leading-relaxed">{title}</p>
+                          <div className="flex flex-row gap-4 mt-4">
+                            <p className="text-blue-600 dark:text-blue-400 font-medium">Followers <span className="font-bold">500+</span></p>
+                            <p className="text-blue-600 dark:text-blue-400 font-medium">Friends <span className="font-bold">127</span></p>
+                          </div>
+                        </div>
+                        <div className="flex mt-5 md:mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
+                        {
+                          UserId === urlid && <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                        }
+                        {
+                          UserId !== urlid && 
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button>
+                                <Ellipsis />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem className="gap-2 hover:bg-red-600/60 cursor-pointer hover:text-red-100" onClick={() => ReportUser(urlid)}><Flag className="w-4 h-4"/>Report</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="gap-2 hover:bg-red-600/60 cursor-pointer hover:text-red-100"><Ban className="w-4 h-4" />Block</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        }
+                          <div className="flex flex-row gap-2  items-end justify-end">
+                            {
+                              UserId !== urlid &&
+                              <>
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white">Follow</Button>
+                                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">Message</Button>
+                              </>
+                            }
+                            {
+                              UserId === urlid &&
+                              <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" onClick={() => EditProfileSections()}>Edit Sections</Button>
+                            }
+                          </div>
                           {
-                            location && (
-                              <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {location}</span>
-                            )
+                            !badges?.includes("verified") || badges && <ProfileBadges badgetypes={badges} />
                           }
-                          <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined September 2024</span>
-                        </div>
-                        <p className="mt-4 max-w-xl text-base leading-relaxed">{title}</p>
-                        <div className="flex flex-row gap-4 mt-4">
-                          <p className="text-blue-600 dark:text-blue-400 font-medium">Followers <span className="font-bold">500+</span></p>
-                          <p className="text-blue-600 dark:text-blue-400 font-medium">Friends <span className="font-bold">127</span></p>
                         </div>
                       </div>
-                      <div className="flex mt-5 md:mt-[-50px] flex-row md:flex-col gap-4 md:w-auto w-full items-end">
-                      {
-                        UserId === urlid && <button className="p-1 rounded-full w-auto px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditProfile}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
-                      }
-                        <div className="flex flex-row gap-2  items-end justify-end">
-                          <Button className="bg-blue-600 hover:bg-blue-700 text-white">Follow</Button>
-                          <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20">Message</Button>
-                        </div>
+                      <div className="flex gap-4 mt-6">
                         {
-                          !badges?.includes("verified") || badges && <ProfileBadges badgetypes={badges} />
-                        }
-                      </div>
-                    </div>
-                    <div className="flex gap-4 mt-6">
-                      {
-                        github && 
-                        <a href={github} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
-                          <Github className="h-5 w-5" />
-                        </Button>
-                      </a>
-                      }
-                      {
-                        twitter && 
-                      <a href={twitter} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
-                          <Twitter className="h-5 w-5" />
-                        </Button>
-                      </a>
-                        }
-                        {
-                          linkedin &&
-                          <a href={linkedin} target="_blank" rel="noopener noreferrer">
+                          github && 
+                          <a href={github} target="_blank" rel="noopener noreferrer">
                           <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
-                            <Linkedin className="h-5 w-5" />
+                            <Github className="h-5 w-5" />
                           </Button>
                         </a>
                         }
+                        {
+                          twitter && 
+                        <a href={twitter} target="_blank" rel="noopener noreferrer">
+                          <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
+                            <Twitter className="h-5 w-5" />
+                          </Button>
+                        </a>
+                          }
+                          {
+                            linkedin &&
+                            <a href={linkedin} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" className="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500" size="icon">
+                              <Linkedin className="h-5 w-5" />
+                            </Button>
+                          </a>
+                          }
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </section>
               {
                 (about || topskills) && 
+                <section id="about">
                 <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  {
-                    about ? (<p className="text-2xl font-semibold">About</p>) : (<p className="text-2xl font-semibold">Top Skills</p> || about && topskills && <p className="text-2xl font-semibold">About</p>)
-                  }
-                  {
-                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
-                  }
-                </CardHeader>
-                <CardContent>
-                  {about &&
-                    <>
-                      <p className="text-base text-gray-600 dark:text-gray-300">{about}</p>
-                      {topskills && <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-4"/>}
-                    </>
-                  }
-                  {topskills && about ? (<h3 className="text-xl font-semibold mb-4">Top Skills</h3>) : null}
-                  <div className="flex flex-wrap gap-2">
-                    {
-                      topskills?.map((skill: string) => (
-                        <SkillBadge key={skill} name={skill} />
-                      ))
-                    }
-                  </div>
-                </CardContent>
-              </Card>
-              }
-              <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <p className="text-2xl font-semibold">Work</p>
-                  {
-                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
-                  }
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-6">
-                    <JobCard
-                      jobtitle="Lead Developer & Founder"
-                      company="HDev Group"
-                      location="Remote"
-                      date="2020 - Present"
-                      skills={["React", "TypeScript", "Node.js", "AWS"]}
-                      description="Lead a team of developers to build cutting-edge web applications and developer tools. Responsible for project planning, code reviews, and technical architecture."
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <p className="text-2xl font-semibold">Projects</p>
-                  {
-                    UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
-                  }
-                </CardHeader>
-                <CardContent>
-                  <ProjectShower />
-                </CardContent>
-              </Card>
-              <Card className="bg-white dark:bg-gray-800 shadow-md">
                   <CardHeader className="flex flex-row items-center justify-between">
-                    <p className="text-2xl font-semibold">Licenses & Certifications</p>
                     {
-                    UserId === urlid && <button className="p-1 rounded-full flex items-center justify-center px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                      about ? (<p className="text-2xl font-semibold">About</p>) : (<p className="text-2xl font-semibold">Top Skills</p> || about && topskills && <p className="text-2xl font-semibold">About</p>)
+                    }
+                    {
+                      UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
                     }
                   </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-6">
-                    <LicensesCard
-                      title="Full Stack Developer"
-                      issuer="HackerRank"
-                      date="2021"
-                    />
-                    <LicensesCard
-                      title="AWS Certified Developer - Associate"
-                      issuer="Amazon Web Services"
-                      date="2022"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white dark:bg-gray-800 shadow-md overflow-hidden">
-                <CardHeader className="border-b border-border">
-                  <div className="flex items-center justify-between">
-                    <CardTitle>
-                      <p className="text-2xl font-bold">Harry is Hiring</p>
-                    </CardTitle>
-                    <Button variant="outline" size="sm">View all jobs</Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <JobsCard
-                      title="Full Stack Developer"
-                      company="HDev Group"
-                      location="Remote"
-                      date="2 days ago"
-                      description="We are looking for a full stack developer to join our team and help us build the next generation of developer tools."
-                    />
-                    <JobsCard
-                      title="UX Designer"
-                      company="HDev Group"
-                      location="Remote"
-                      date="1 week ago"
-                      description="Join our design team to create intuitive and beautiful user experiences for our cutting-edge products."
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white dark:bg-gray-800 shadow-md">
-                <CardHeader>
-                  <CardTitle>
-                    <p className="text-2xl font-semibold">Reputation</p>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-6">
-                    <UserReputationCard
-                      score={95}
-                      name="Harry Campbell"
-                    />
-                    <div className="w-full h-px bg-gray-200 dark:bg-gray-700"/>
-                    <div className="flex flex-col gap-4">
-                      <ReviewCard
-                        reviewerid="Jane Doe"
-                        review="Harry is an exceptional developer. His attention to detail and problem-solving skills are impressive. He helped me build a complex web application, and the result exceeded my expectations."
-                        rating={5}
-                      />
-                      <ReviewCard
-                        reviewerid="John Smith"
-                        review="Working with Harry was a great experience. He's professional, communicative, and delivers high-quality work on time."
-                        rating={4}
+                  <CardContent>
+                    {about &&
+                      <>
+                        <p className="text-base text-gray-600 dark:text-gray-300">{about}</p>
+                        {topskills && <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-4"/>}
+                      </>
+                    }
+                    {topskills && about ? (<h3 className="text-xl font-semibold mb-4">Top Skills</h3>) : null}
+                    <div className="flex flex-wrap gap-2">
+                      {
+                        topskills?.map((skill: string) => (
+                          <SkillBadge key={skill} name={skill} />
+                        ))
+                      }
+                    </div>
+                  </CardContent>
+                </Card>
+                </section>
+              }
+              <section id="work">
+                <Card className="bg-white dark:bg-gray-800 shadow-md">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <p className="text-2xl font-semibold">Work</p>
+                    {
+                      UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                    }
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-6">
+                      <JobCard
+                        jobtitle="Lead Developer & Founder"
+                        company="HDev Group"
+                        location="Remote"
+                        date="2020 - Present"
+                        skills={["React", "TypeScript", "Node.js", "AWS"]}
+                        description="Lead a team of developers to build cutting-edge web applications and developer tools. Responsible for project planning, code reviews, and technical architecture."
                       />
                     </div>
-                  </div>  
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </section>
+              <section id="projects">
+                <Card className="bg-white dark:bg-gray-800 shadow-md">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <p className="text-2xl font-semibold">Projects</p>
+                    {
+                      UserId === urlid && <button className="p-1 rounded-full  px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                    }
+                  </CardHeader>
+                  <CardContent>
+                    <ProjectShower />
+                  </CardContent>
+                </Card>
+              </section>
+              <section id="licenses">
+                <Card className="bg-white dark:bg-gray-800 shadow-md">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <p className="text-2xl font-semibold">Licenses & Certifications</p>
+                      {
+                      UserId === urlid && <button className="p-1 rounded-full flex items-center justify-center px-2 py-1.5 bg-neutral-300/20 backdrop-blur-md" onClick={EditAbout}><Edit className="w-5 hover:text-neutral-900 dark:hover:text-neutral-300 transition-all" /></button>
+                      }
+                    </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-6">
+                      <LicensesCard
+                        title="Full Stack Developer"
+                        issuer="HackerRank"
+                        date="2021"
+                      />
+                      <LicensesCard
+                        title="AWS Certified Developer - Associate"
+                        issuer="Amazon Web Services"
+                        date="2022"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+              <section id="hiring">
+                <Card className="bg-white dark:bg-gray-800 shadow-md overflow-hidden">
+                  <CardHeader className="border-b border-border">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>
+                        <p className="text-2xl font-bold">Harry is Hiring</p>
+                      </CardTitle>
+                      <Button variant="outline" size="sm">View all jobs</Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <JobsCard
+                        title="Full Stack Developer"
+                        company="HDev Group"
+                        location="Remote"
+                        date="2 days ago"
+                        description="We are looking for a full stack developer to join our team and help us build the next generation of developer tools."
+                      />
+                      <JobsCard
+                        title="UX Designer"
+                        company="HDev Group"
+                        location="Remote"
+                        date="1 week ago"
+                        description="Join our design team to create intuitive and beautiful user experiences for our cutting-edge products."
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+              <section id="reputation">
+                <Card className="bg-white dark:bg-gray-800 shadow-md">
+                  <CardHeader>
+                    <CardTitle>
+                      <p className="text-2xl font-semibold">Reputation</p>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-6">
+                      <UserReputationCard
+                        score={95}
+                        name="Harry Campbell"
+                      />
+                      <div className="w-full h-px bg-gray-200 dark:bg-gray-700"/>
+                      <div className="flex flex-col gap-4">
+                        <ReviewCard
+                          reviewerid="Jane Doe"
+                          review="Harry is an exceptional developer. His attention to detail and problem-solving skills are impressive. He helped me build a complex web application, and the result exceeded my expectations."
+                          rating={5}
+                        />
+                        <ReviewCard
+                          reviewerid="John Smith"
+                          review="Working with Harry was a great experience. He's professional, communicative, and delivers high-quality work on time."
+                          rating={4}
+                        />
+                      </div>
+                    </div>  
+                  </CardContent>
+                </Card>
+              </section>
             </main>
           </div>
         </div>
         {
           isModalProfile && <EditProfileModal user={userData} useridentify={params.userid} closeModal={handleClose} />
+        }
+        {
+          isEditSections && <EditProfileSectionsModal closeModal={handleCloseEditSection} />
+        }
+        {
+          isEditAbout && <EditAboutSection closeModal={closehandEditAboutSection} />
         }
       </body>
     </>

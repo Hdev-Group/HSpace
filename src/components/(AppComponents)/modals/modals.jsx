@@ -8,6 +8,13 @@ import { Label } from "../../ui/label";
 import { api } from "../../../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { useUser } from "@clerk/clerk-react"
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export function EditProfileModal({ closeModal, useridentify, user }) {
   const getuserdata = useQuery(api.users.user, { id: useridentify });
@@ -131,7 +138,7 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
   }
   };
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center" id='outerclickclose'>
+    <div className="fixed inset-0 z-50 bg-[#181D27] bg-opacity-50 flex justify-center" id='outerclickclose'>
       <div className="bg-gray-800 border-gray-50/10 border w-full md:w-1/2 h-full md:max-h-[60vh] md:mt-[60px] rounded-md flex flex-col" id='innercloser'>
         <div className=" flex justify-start flex-col h-full w-full ">
           <div className="flex flex-col justify-between items-start ">
@@ -248,22 +255,26 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
                     value={formData.linkedin}
                   />
                 </div>
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-0.5 holdatter relative">
                   <label className="text-sm text-gray-300">Twitter</label>
+                  <span class="input-prefix mt-2">x.com/</span>
                   <Input 
                     id="twitter" 
                     name="twitter" 
-                    className="border border-neutral-300" 
+                    className="border border-neutral-300  pl-[60px] input-fielder flex items-center justify-center" 
                     onChange={handleInputChange} 
+                    value={formData.twitter}
                   />
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <label className="text-sm text-gray-300">GitHub</label>
+                <div className="flex flex-col gap-0.5 holdatter relative">
+                  <label className="text-sm text-gray-300">Github</label>
+                  <span class="input-prefix mt-2">github.com/</span>
                   <Input 
                     id="github" 
                     name="github" 
-                    className="border border-neutral-300" 
+                    className="border border-neutral-300 pl-[97px] input-fielder flex items-center justify-center" 
                     onChange={handleInputChange} 
+                    value={formData.github}
                   />
                 </div>
                 </div>
@@ -280,4 +291,206 @@ export function EditProfileModal({ closeModal, useridentify, user }) {
       </div>
     </div>
   );
+}
+
+
+export function EditProfileSectionsModal({ closeModal }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const handleClickOutside = (e) => {
+      if (e.target.id === 'outerclickclose') {
+        closeModal();
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [closeModal]);
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 bg-[#181D27] bg-opacity-50 flex justify-center transition-opacity ease-in-out duration-300" 
+      id="outerclickclose" 
+      aria-modal="true" 
+      role="dialog"
+    >
+      <div 
+        className="bg-gray-800 border-gray-50/10 border w-full md:w-1/3 md:min-w-[40rem] mt-10 h-min rounded-md flex flex-col overflow-hidden animate-fadeIn" 
+        id="innercloser"
+        role="document"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-50/20">
+          <h2 className="text-xl font-medium text-white">Edit Sections</h2>
+          <button
+            className="bg-primary-500 text-white px-3.5 py-1.5 rounded-md hover:bg-red-500/20 hover:border-red-500 border transition-all focus:outline-none"
+            onClick={closeModal}
+            aria-label="Close modal"
+          >
+            Close
+          </button>
+        </div>
+        <div className="flex flex-col gap-4  overflow-y-auto h-full">
+          <Accordion type="single" className="border-b 0" collapsible>
+            <AccordionItem value="main" className="border-b border-gray-50/20">
+              <AccordionTrigger className="font-semibold text-lg px-4">Main</AccordionTrigger>
+              <AccordionContent className="pb-[8px] px-4">
+                <p className="mb-3 text-neutral-300 text-md ">Start with the basics. These sections will help you get discovered.</p>
+                <ul className="flex flex-col gap-4">
+                  <li className="border-b text-neutral-400 border-gray-50/20 pb-2 font-semibold text-[15px]">
+                    Add About
+                  </li>
+                  <li className="border-b text-neutral-400 border-gray-50/20 pb-2 font-semibold text-[15px]">
+                    Add Work
+                  </li>
+                  <li className="font-semibold text-[15px] text-neutral-400">
+                    Add Skills
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="recommended">
+              <AccordionTrigger className="font-semibold text-lg px-4">Recommended</AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <p className="mb-3 text-neutral-300 text-md ">Add these sections to showcase your work and interests.</p>
+                <ul className="flex flex-col gap-4">
+                  <li className="border-b border-gray-50/20 pb-2 font-semibold text-[15px]">
+                    Add Projects
+                  </li>
+                  <li className="border-b border-gray-50/20 pb-2 font-semibold text-[15px]">
+                    Add Education
+                  </li>
+                  <li className="font-semibold text-[15px]">
+                    Add Certifications
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </div>
+    </div>
+  );
+}  
+
+export function EditAboutSection({ closeModal }) {
+  const [skillinput, setSkillInputter] = useState('');
+  const [skills, setSkills] = useState([]);
+  console.log(skills);
+
+
+  useEffect(() => {
+    const skillinputter = document.getElementById('skillinputter');
+  
+    const handleKeyDown = (e) => {
+      const inputValue = skillinputter.value.trim();
+      if (e.key === 'Enter' || e.key === ',') {
+        if (inputValue === '') return;
+        setSkills(prevSkills => [...prevSkills, inputValue]);
+        skillinputter.value = '';
+      }
+    };
+  
+    skillinputter.addEventListener('keydown', handleKeyDown);
+  
+    return () => {
+      skillinputter.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setSkills]);
+
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const handleClickOutside = (e) => {
+      if (e.target.id === 'outerclickclose') {
+        closeModal();
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [closeModal]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Skills:', skills);
+    console.log("About:", document.getElementById('about').value);
+
+    // Save data to the database
+
+  };
+
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center" id='outerclickclose'>
+      <div className="bg-[#181D27] border-gray-50/10 border w-full md:w-1/2 h-full md:max-h-[60vh] md:mt-[60px] rounded-md flex flex-col" id='innercloser'>
+        <div className=" flex justify-start flex-col h-full w-full ">
+          <div className="flex flex-col justify-between items-start ">
+            <div className="flex flex-row justify-between w-full items-center px-4 py-3">
+              <div>
+                <h2 className="text-xl font-medium text-white">Edit Section</h2>
+              </div>
+              <button
+                className="bg-primary-500 text-white px-3.5 py-1.5 rounded-md hover:bg-red-500/20 hover:border-red-500 border transition-all"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+            <div className="w-full border-t border-gray-50/20" />
+          </div>
+          <div className="flex flex-col gap-6 h-full justify-start">
+            <div className="flex flex-col px-4 gap-4 mt-4 h-auto">
+              <h1 className="font-semibold text-lg">About</h1>
+              <div className="flex flex-col gap-4">
+                  <div className="w-full">
+                    <Textarea
+                      id="about"
+                      name="about"
+                      className="border w-full border-neutral-300"
+                      placeholder="Write a short bio about yourself..."
+                    />
+                  </div>
+                </div>
+            </div>
+            <div className="flex flex-col px-4 gap-4  h-full">
+              <h1 className="font-semibold text-lg">Skills</h1>
+              <div className="flex flex-col gap-4">
+                  <div className="space-y-4 w-full">
+                    <div className="flex flex-row flex-wrap justify-start gap-2 items-center">
+                      {skills.map((skill, index) => (
+                        <div key={index} onClick={() => setSkills(skills.filter((_, i) => i !== index))} className="flex hover:bg-red-800 border px-2 border-white py-0.5 rounded-lg cursor-pointer transition-all flex-row justify-between items-center w-auto">
+                          <p className="text-sm text-gray-300">{skill}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-row justify-between items-center">
+                      <Input
+                        type="text"
+                        id="skillinputter"
+                        className="w-full border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-neutral-300"
+                        placeholder="Add a skill..."
+                      />
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div className="flex flex-row justify-end w-full items-center px-4 py-3 border-t border-gray-50/20">
+            <button
+              className="dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-8 py-1.5 text-[17px] rounded-md  transition-all"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
